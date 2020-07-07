@@ -1,5 +1,5 @@
 # camera-placement
-Repository for data and script for the manuscript entitled: Species-specific effects of camera-trap placement on detection of members of a mammalian community by Tim R. Hofmeester, Neri H. Thorsen, Joris P. G. M. Cromsigt, Jonas Kindberg, Henrik Andrén, John D. C. Linnell & John Odden 
+Repository for data and code for the manuscript entitled: Species-specific effects of camera-trap placement on detection of members of a mammalian community by Tim R. Hofmeester, Neri H. Thorsen, Joris P. G. M. Cromsigt, Jonas Kindberg, Henrik Andrén, John D. C. Linnell & John Odden 
 
 <b>Abstract</b>
 
@@ -9,4 +9,4 @@ Camera-trapping studies often aim at elusive species such as large carnivores, a
 
 The MSocc- files contain the detection history and covariate data as used in the manuscript.
 
-The R-script contains the description of the model and code to run the model using the different MSocc- files.
+The R-script contains the description of the models and code to run the models using the different MSocc- files.
