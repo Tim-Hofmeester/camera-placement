@@ -25,9 +25,10 @@ cat(file="MSocc-HM-all.txt",
     int.theta <- logit(theta0)        #Intercepts for availability probability
     theta0 ~ dunif(0,1) 
     
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
-    
+    for(t in 1:3){
+    int.p[t] <- logit(p0[t])          #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)     
+    }
     
     #Slope of site covariate
     for(t in 1:3){
@@ -40,12 +41,12 @@ cat(file="MSocc-HM-all.txt",
     }
     
     #Slope of p covariates
-    for(t in 1:6){
+    for(t in 1:5){
     beta.lp[t] ~ dnorm(0,0.01)
     }
 
     #Inclusion parameter priors
-    for(c in 1:11){
+    for(c in 1:7){
     w[c] ~ dbern(0.5)
     }
     
@@ -75,13 +76,12 @@ cat(file="MSocc-HM-all.txt",
     # detection probability on day k
     y[i,j,k] ~ dbern(mu.y[i,j,k])
     mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p + 
-    w[8] * beta.lp[1] * target.cam[i,j] +          # if camera is targeted (1) or not (0)
-    w[9] * beta.lp[2] * equals(micro[i,j],2) +     # forest road compared to no feature (intercept)
-    w[9] * beta.lp[3] * equals(micro[i,j],3) +     # wildlife trail compared to no feature (intercept)
-    w[9] * beta.lp[4] * equals(micro[i,j],4) +     # cliff compared to no feature (intercept)
-    w[10]* beta.lp[5] * cam.height[i,j] +          # height of the camera from the ground
-    w[11]* beta.lp[6] * walktest[i,j]
+    logit(p[i,j,k]) <- int.p[j] + 
+    beta.lp[1] * equals(micro[i,j],2) +     # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],3) +     # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i,j],4) +     # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i,j] +          # height of the camera from the ground
+    beta.lp[5] * walktest[i,j]
     }
     }
     }
@@ -103,8 +103,10 @@ cat(file="MSocc-HM-TL.txt",
     int.theta <- logit(theta0)        #Intercepts for availability probability
     theta0 ~ dunif(0,1) 
     
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
+    for(t in 1:2){
+    int.p[t] <- logit(p0[t])          #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)
+    }
     
     #Slope of site covariate
     for(t in 1:3){
@@ -117,12 +119,12 @@ cat(file="MSocc-HM-TL.txt",
     }
     
     #Slope of p covariates
-    for(t in 1:6){
+    for(t in 1:5){
     beta.lp[t] ~ dnorm(0,0.01)
     }
 
     #Inclusion parameter priors
-    for(c in 1:11){
+    for(c in 1:7){
     w[c] ~ dbern(0.5)
     }
     
@@ -142,8 +144,8 @@ cat(file="MSocc-HM-TL.txt",
     a[i,j] ~ dbern(mu.a[i,j])
     mu.a[i,j] <- z[i] * theta[i,j]
     logit(theta[i,j]) <- int.theta + 
-    w[4] * beta.ltheta[1] * target.site[i,j] +            # if camera is targeted (1) or not (0)
-    w[5] * beta.ltheta[2] * ruggedness[i,j] +            # slope for ruggedness
+    w[4] * beta.ltheta[1] * target.site[i,j] +          # if camera is targeted (1) or not (0)
+    w[5] * beta.ltheta[2] * ruggedness[i,j] +           # slope for ruggedness
     w[6] * beta.ltheta[3] * forest.site[i,j] +          # forest cover 1km2 around camera
     w[7] * beta.ltheta[4] * field.site[i,j]             # field cover 1km2 around camera
 
@@ -153,13 +155,12 @@ cat(file="MSocc-HM-TL.txt",
     # detection probability on day k
     y[i,j,k] ~ dbern(mu.y[i,j,k])
     mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p + 
-    w[8] * beta.lp[1] * target.cam[i,j] +
-    w[9] * beta.lp[2] * equals(micro[i,j],2) +   # forest road compared to no feature (intercept)
-    w[9] * beta.lp[3] * equals(micro[i,j],3) +   # wildlife trail compared to no feature (intercept)
-    w[9] * beta.lp[4] * equals(micro[i,j],4) +   # cliff compared to no feature (intercept)
-    w[10]* beta.lp[5] * cam.height[i,j] +
-    w[11]* beta.lp[6] * walktest[i,j]
+    logit(p[i,j,k]) <- int.p[j] + 
+    beta.lp[1] * equals(micro[i,j],2) +   # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i,j],4) +   # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i,j] +
+    beta.lp[5] * walktest[i,j]
     }
     }
     }
@@ -181,8 +182,10 @@ cat(file="MSocc-HM-TH.txt",
     int.theta <- logit(theta0)        #Intercepts for availability probability
     theta0 ~ dunif(0,1) 
     
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
+    for(t in 1:2){
+    int.p[t] <- logit(p0[t])          #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)
+    }
     
     #Slope of site covariate
     for(t in 1:3){
@@ -196,12 +199,12 @@ cat(file="MSocc-HM-TH.txt",
     }
     
     #Slope of p covariates
-    for(t in 1:6){
+    for(t in 1:5){
     beta.lp[t] ~ dnorm(0,0.01)
     }
 
     #Inclusion parameter priors
-    for(c in 1:10){
+    for(c in 1:6){
     w[c] ~ dbern(0.5)
     }
     
@@ -231,13 +234,89 @@ cat(file="MSocc-HM-TH.txt",
     # detection probability on day k
     y[i,j,k] ~ dbern(mu.y[i,j,k])
     mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p + 
-    w[7] * beta.lp[1] * target.cam[i,j] +
-    w[8] * beta.lp[2] * equals(micro[i,j],2) +   # forest road compared to no feature (intercept)
-    w[8] * beta.lp[3] * equals(micro[i,j],3) +   # wildlife trail compared to no feature (intercept)
-    w[8] * beta.lp[4] * equals(micro[i,j],4) +   # cliff compared to no feature (intercept)
-    w[9] * beta.lp[5] * cam.height[i,j] +
-    w[10]* beta.lp[6] * walktest[i,j]
+    logit(p[i,j,k]) <- int.p[j] + 
+    beta.lp[1] * equals(micro[i,j],2) +   # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i,j],4) +   # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i,j] +
+    beta.lp[5] * walktest[i,j]
+    }
+    }
+    }
+    } #End Model
+    ")
+
+## Multi-scale model for all habitat patch and lanscape cameras ##
+
+cat(file="MSocc-HM-HL.txt", 
+    "
+    model{
+    
+    # Priors and model for params
+    
+    int.psi <- logit(psi0)            #Intercept for occupancy probability
+    psi0 ~ dunif(0,1)        
+    
+    int.theta <- logit(theta0)        #Intercepts for availability probability
+    theta0 ~ dunif(0,1) 
+    
+    for(t in 1:2){
+    int.p[t] <- logit(p0[t])          #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)
+    }
+    
+    #Slope of site covariate
+    for(t in 1:3){
+    beta.lpsi[t] ~ dnorm(0,0.01)
+    }        
+    
+    #Slopes of ct covariates
+    for(t in 1:4){        
+    beta.ltheta[t] ~ dnorm(0,0.01)
+    }
+    
+    #Slope of p covariates
+    for(t in 1:4){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }
+
+    #Inclusion parameter priors
+    for(c in 1:7){
+    w[c] ~ dbern(0.5)
+    }
+    
+    #Likelihood (or basic model structure)
+    for(i in 1:n.site){
+    
+    #Occurrence in site i
+    z[i] ~ dbern(psi[i])
+    logit(psi[i]) <- int.psi + 
+    w[1] * beta.lpsi[1] * elev[i] + 
+    w[2] * beta.lpsi[2] * forest.grid[i] + 
+    w[3] * beta.lpsi[3] * field.grid[i] 
+    
+    for(j in 1:n.cts){
+    
+    #Occurrence at camera location j
+    a[i,j] ~ dbern(mu.a[i,j])
+    mu.a[i,j] <- z[i] * theta[i,j]
+    logit(theta[i,j]) <- int.theta + 
+    w[4] * beta.ltheta[1] * target.site[i,j] +            # if camera is targeted (1) or not (0)
+    w[5] * beta.ltheta[2] * ruggedness[i,j] +             # slope for ruggedness
+    w[6] * beta.ltheta[3] * forest.site[i,j] +            # forest cover 1km2 around camera
+    w[7] * beta.ltheta[4] * field.site[i,j]               # field cover 1km2 around camera
+
+    
+    for(k in 1:n.days){
+    
+    # detection probability on day k
+    y[i,j,k] ~ dbern(mu.y[i,j,k])
+    mu.y[i,j,k] <- a[i,j] * p[i,j,k]
+    logit(p[i,j,k]) <- int.p[j] + 
+    beta.lp[1] * equals(micro[i,j],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],4) +   # cliff compared to no feature (intercept)
+    beta.lp[3] * cam.height[i,j] +
+    beta.lp[4] * walktest[i,j]
     }
     }
     }
@@ -270,7 +349,7 @@ cat(file="occ-HM-T.txt",
     }
 
     #Inclusion parameter priors
-    for(c in 1:9){
+    for(c in 1:6){
     w[c] ~ dbern(0.5)
     }
     
@@ -293,11 +372,11 @@ cat(file="occ-HM-T.txt",
     y[i,k] ~ dbern(mu.y[i,k])
     mu.y[i,k] <- z[i] * p[i,k]
     logit(p[i,k]) <- int.p + 
-    w[7] * beta.lp[1] * equals(micro[i],2) +   # forest road compared to no feature (intercept)
-    w[7] * beta.lp[2] * equals(micro[i],3) +   # wildlife trail compared to no feature (intercept)
-    w[7] * beta.lp[3] * equals(micro[i],4) +   # cliff compared to no feature (intercept)
-    w[8] * beta.lp[4] * cam.height[i] +
-    w[9] * beta.lp[5] * walktest[i]
+    beta.lp[1] * equals(micro[i],2) +   # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i],4) +   # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i] +
+    beta.lp[5] * walktest[i]
     }
     }
     } #End Model
@@ -329,7 +408,7 @@ cat(file="occ-HM-L.txt",
     }
 
     #Inclusion parameter priors
-    for(c in 1:9){
+    for(c in 1:6){
     w[c] ~ dbern(0.5)
     }
     
@@ -352,21 +431,21 @@ cat(file="occ-HM-L.txt",
     y[i,k] ~ dbern(mu.y[i,k])
     mu.y[i,k] <- z[i] * p[i,k]
     logit(p[i,k]) <- int.p + 
-    w[7] * beta.lp[1] * equals(micro[i],3) +   # wildlife trail compared to no feature (intercept)
-    w[7] * beta.lp[2] * equals(micro[i],4) +    # cliff compared to no feature (intercept)
-    w[8] * beta.lp[3] * cam.height[i] +
-    w[9] * beta.lp[4] * walktest[i]
+    beta.lp[1] * equals(micro[i],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i],4) +    # cliff compared to no feature (intercept)
+    beta.lp[3] * cam.height[i] +
+    beta.lp[4] * walktest[i]
     }
     }
     } #End Model
     ")
 
-#### The null models ####
+#### Null models ####
 
-## Multi-scale model ##
+## Multi-camera null model ##
 
 # model
-cat(file="MSocc-HMnull.txt", 
+cat(file="MSocc-HM-all-null.txt", 
     "
     model{
     
@@ -378,9 +457,15 @@ cat(file="MSocc-HMnull.txt",
     int.theta <- logit(theta0)        #Intercepts for availability probability
     theta0 ~ dunif(0,1) 
     
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
+    for(t in 1:3){
+    int.p[t] <- logit(p0[t])          #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)     
+    }
     
+    #Slope of p covariates
+    for(t in 1:5){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }
     
     #Likelihood (or basic model structure)
     for(i in 1:n.site){
@@ -394,24 +479,29 @@ cat(file="MSocc-HMnull.txt",
     #Occurrence at camera location j
     a[i,j] ~ dbern(mu.a[i,j])
     mu.a[i,j] <- z[i] * theta[i,j]
-    logit(theta[i,j]) <- int.theta 
+    logit(theta[i,j]) <- int.theta
     
     for(k in 1:n.days){
     
     # detection probability on day k
     y[i,j,k] ~ dbern(mu.y[i,j,k])
     mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p
+    logit(p[i,j,k]) <- int.p[j] + 
+    beta.lp[1] * equals(micro[i,j],2) +     # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],3) +     # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i,j],4) +     # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i,j] +          # height of the camera from the ground
+    beta.lp[5] * walktest[i,j]
     }
     }
     }
     } #End Model
     ")
 
-## Single-scale model ##
+## Single targeted-camera null model ##
 
 # model
-cat(file="occ-HMnull.txt", 
+cat(file="MSocc-HM-T-null.txt", 
     "
     model{
     
@@ -421,7 +511,12 @@ cat(file="occ-HMnull.txt",
     psi0 ~ dunif(0,1)        
     
     int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
+    p0 ~ dunif(0,1)
+    
+    #Slope of p covariates
+    for(t in 1:5){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }
     
     #Likelihood (or basic model structure)
     for(i in 1:n.site){
@@ -435,13 +530,120 @@ cat(file="occ-HMnull.txt",
     # detection probability on day k
     y[i,k] ~ dbern(mu.y[i,k])
     mu.y[i,k] <- z[i] * p[i,k]
-    logit(p[i,k]) <- int.p 
+    logit(p[i,k]) <- int.p +
+    beta.lp[1] * equals(micro[i],2) +   # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i],4) +   # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i] +
+    beta.lp[5] * walktest[i]
+    }
+    }
+    } #End Model
+    ")
+
+## Single landscape-camera null model ##
+
+# model
+cat(file="MSocc-HM-L-null.txt", 
+    "
+    model{
+    
+    # Priors and model for params
+    
+    int.psi <- logit(psi0)            #Intercept for occupancy probability
+    psi0 ~ dunif(0,1)        
+    
+    int.p <- logit(p0)                #Intercepts for detection probability
+    p0 ~ dunif(0,1) 
+    
+    #Slope for p covariates
+    for(t in 1:4){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }
+    
+    #Likelihood (or basic model structure)
+    for(i in 1:n.site){
+    
+    #Occurrence in site i
+    z[i] ~ dbern(psi[i])
+    logit(psi[i]) <- int.psi
+    
+    for(k in 1:n.days){
+    
+    # detection probability on day k
+    y[i,k] ~ dbern(mu.y[i,k])
+    mu.y[i,k] <- z[i] * p[i,k]
+    logit(p[i,k]) <- int.p +
+    beta.lp[1] * equals(micro[i],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i],4) +    # cliff compared to no feature (intercept)
+    beta.lp[3] * cam.height[i] +
+    beta.lp[4] * walktest[i]
     }
     }
     } #End Model
     ")
 
 #### Final models all three cameras ####
+
+## Moose ##
+
+# model
+cat(file="MSocc-HM-all-moose.txt", 
+    "
+    model{
+    
+    # Priors and model for params
+    
+    int.psi <- logit(psi0)            #Intercept for occupancy probability
+    psi0 ~ dunif(0,1)        
+    
+    int.theta <- logit(theta0)        #Intercepts for availability probability
+    theta0 ~ dunif(0,1) 
+    
+    for(t in 1:3){
+    int.p[t] <- logit(p0[t])          #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)     
+    }
+    
+    #Slope of theta covariate
+    beta.ltheta ~ dnorm(0,0.01)
+    
+    #Slope of p covariates
+    for(t in 1:5){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }
+    
+    #Likelihood (or basic model structure)
+    for(i in 1:n.site){
+    
+    #Occurrence in site i
+    z[i] ~ dbern(psi[i])
+    logit(psi[i]) <- int.psi 
+    
+    for(j in 1:n.cts){
+    
+    #Occurrence at camera location j
+    a[i,j] ~ dbern(mu.a[i,j])
+    mu.a[i,j] <- z[i] * theta[i,j]
+    logit(theta[i,j]) <- int.theta +
+    beta.ltheta * field.site[i,j]            # field cover 1km2 around camera
+    
+    for(k in 1:n.days){
+    
+    # detection probability on day k
+    y[i,j,k] ~ dbern(mu.y[i,j,k])
+    mu.y[i,j,k] <- a[i,j] * p[i,j,k]
+    logit(p[i,j,k]) <- int.p[j] + 
+    beta.lp[1] * equals(micro[i,j],2) +     # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],3) +     # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i,j],4) +     # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i,j] +          # height of the camera from the ground
+    beta.lp[5] * walktest[i,j]
+    }
+    }
+    }
+    } #End Model
+    ")
 
 ## Roe deer ##
 
@@ -458,13 +660,17 @@ cat(file="MSocc-HM-all-roedeer.txt",
     int.theta <- logit(theta0)        #Intercepts for availability probability
     theta0 ~ dunif(0,1) 
     
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
+    for(t in 1:3){
+    int.p[t] <- logit(p0[t])          #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)     
+    }
     
+    #Slope of theta covariate
+    beta.ltheta ~ dnorm(0,0.01)
     
-    #Slope of site covariate
-    for(t in 1:2){
-    beta.ltheta[t] ~ dnorm(0,0.01)
+    #Slope of p covariates
+    for(t in 1:5){
+    beta.lp[t] ~ dnorm(0,0.01)
     }
     
     #Likelihood (or basic model structure)
@@ -479,66 +685,20 @@ cat(file="MSocc-HM-all-roedeer.txt",
     #Occurrence at camera location j
     a[i,j] ~ dbern(mu.a[i,j])
     mu.a[i,j] <- z[i] * theta[i,j]
-    logit(theta[i,j]) <- int.theta + 
-    beta.ltheta[1] * target.site[i,j] +          # if camera is targeted (1) or not (0)
-    beta.ltheta[2] * field.site[i,j]             # percentage of field in 1km2 surrounding camera
+    logit(theta[i,j]) <- int.theta +
+    beta.ltheta * field.site[i,j]            # field cover 1km2 around camera
     
     for(k in 1:n.days){
     
     # detection probability on day k
     y[i,j,k] ~ dbern(mu.y[i,j,k])
     mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p
-    }
-    }
-    }
-    } #End Model
-    ")
-
-## Mountain hare ##
-
-# model
-cat(file="MSocc-HM-all-hare.txt", 
-    "
-    model{
-    
-    # Priors and model for params
-    
-    int.psi <- logit(psi0)            #Intercept for occupancy probability
-    psi0 ~ dunif(0,1)        
-    
-    int.theta <- logit(theta0)        #Intercepts for availability probability
-    theta0 ~ dunif(0,1) 
-    
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
-    
-
-    #Slope of p covariate
-    beta.lp ~ dnorm(0,0.01)
-    
-
-    #Likelihood (or basic model structure)
-    for(i in 1:n.site){
-    
-    #Occurrence in site i
-    z[i] ~ dbern(psi[i])
-    logit(psi[i]) <- int.psi 
-    
-    for(j in 1:n.cts){
-    
-    #Occurrence at camera location j
-    a[i,j] ~ dbern(mu.a[i,j])
-    mu.a[i,j] <- z[i] * theta[i,j]
-    logit(theta[i,j]) <- int.theta 
-    
-    for(k in 1:n.days){
-    
-    # detection probability on day k
-    y[i,j,k] ~ dbern(mu.y[i,j,k])
-    mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p + 
-    beta.lp * target.cam[i,j]           # if camera was targeted (1) or not (0)
+    logit(p[i,j,k]) <- int.p[j] + 
+    beta.lp[1] * equals(micro[i,j],2) +     # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],3) +     # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i,j],4) +     # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i,j] +          # height of the camera from the ground
+    beta.lp[5] * walktest[i,j]
     }
     }
     }
@@ -560,16 +720,18 @@ cat(file="MSocc-HM-all-fox.txt",
     int.theta <- logit(theta0)        #Intercepts for availability probability
     theta0 ~ dunif(0,1) 
     
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
+    for(t in 1:3){
+    int.p[t] <- logit(p0[t])                #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)     
+    }
     
-    
-    #Slope of site covariate
+    #Slope of theta covariate
     beta.ltheta ~ dnorm(0,0.01)
-
-    #Slope of p covariates
-    beta.lp ~ dnorm(0,0.01)
     
+    #Slope of p covariates
+    for(t in 1:5){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }
     
     #Likelihood (or basic model structure)
     for(i in 1:n.site){
@@ -591,8 +753,12 @@ cat(file="MSocc-HM-all-fox.txt",
     # detection probability on day k
     y[i,j,k] ~ dbern(mu.y[i,j,k])
     mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p + 
-    beta.lp * target.cam[i,j]                 # if the cameras were in a targeted micro site (1) or not (0)
+    logit(p[i,j,k]) <- int.p[j] + 
+    beta.lp[1] * equals(micro[i,j],2) +     # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],3) +     # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i,j],4) +     # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i,j] +          # height of the camera from the ground
+    beta.lp[5] * walktest[i,j]
     }
     }
     }
@@ -616,19 +782,19 @@ cat(file="MSocc-HM-TL-roedeer.txt",
     int.theta <- logit(theta0)        #Intercepts for availability probability
     theta0 ~ dunif(0,1) 
     
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
- 
+    for(t in 1:2){
+    int.p[t] <- logit(p0[t])          #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)     
+    }
     
-    #Slope for site covariate
+    #Slope of theta covariate
     beta.ltheta ~ dnorm(0,0.01)
     
-    #Slope for p covariates
-    for(t in 1:2){
+    #Slope of p covariates
+    for(t in 1:5){
     beta.lp[t] ~ dnorm(0,0.01)
     }
-
-
+    
     #Likelihood (or basic model structure)
     for(i in 1:n.site){
     
@@ -649,58 +815,12 @@ cat(file="MSocc-HM-TL-roedeer.txt",
     # detection probability on day k
     y[i,j,k] ~ dbern(mu.y[i,j,k])
     mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p +
-    beta.lp[1] * target.cam[i,j] +
-    beta.lp[2] * walktest[i,j]
-    }
-    }
-    }
-    } #End Model
-    ")
-
-## Mountain hare ##
-
-# model
-cat(file="MSocc-HM-TL-hare.txt", 
-    "
-    model{
-    
-    # Priors and model for params
-    
-    int.psi <- logit(psi0)            #Intercept for occupancy probability
-    psi0 ~ dunif(0,1)        
-    
-    int.theta <- logit(theta0)        #Intercepts for availability probability
-    theta0 ~ dunif(0,1) 
-    
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
-    
-    
-    #Slope for p covariate
-    beta.lp ~ dnorm(0,0.01)
-
-    #Likelihood (or basic model structure)
-    for(i in 1:n.site){
-    
-    #Occurrence in site i
-    z[i] ~ dbern(psi[i])
-    logit(psi[i]) <- int.psi 
-    
-    for(j in 1:n.cts){
-    
-    #Occurrence at camera location j
-    a[i,j] ~ dbern(mu.a[i,j])
-    mu.a[i,j] <- z[i] * theta[i,j]
-    logit(theta[i,j]) <- int.theta 
-    
-    for(k in 1:n.days){
-    
-    # detection probability on day k
-    y[i,j,k] ~ dbern(mu.y[i,j,k])
-    mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p +
-    beta.lp * target.cam[i,j]
+    logit(p[i,j,k]) <- int.p[j] +
+    beta.lp[1] * equals(micro[i,j],2) +   # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i,j],4) +   # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i,j] +
+    beta.lp[5] * walktest[i,j]    
     }
     }
     }
@@ -722,16 +842,19 @@ cat(file="MSocc-HM-TL-fox.txt",
     int.theta <- logit(theta0)        #Intercepts for availability probability
     theta0 ~ dunif(0,1) 
     
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
+    for(t in 1:2){
+    int.p[t] <- logit(p0[t])          #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)     
+    }
     
-    
-    #Slope for site covariate
+    #Slope of theta covariate
     beta.ltheta ~ dnorm(0,0.01)
-
-    #Slope for p covariate
-    beta.lp ~ dnorm(0,0.01)
-
+    
+    #Slope of p covariates
+    for(t in 1:5){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }
+    
     #Likelihood (or basic model structure)
     for(i in 1:n.site){
     
@@ -752,8 +875,12 @@ cat(file="MSocc-HM-TL-fox.txt",
     # detection probability on day k
     y[i,j,k] ~ dbern(mu.y[i,j,k])
     mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p +
-    beta.lp * walktest[i,j]
+    logit(p[i,j,k]) <- int.p[j] +
+    beta.lp[1] * equals(micro[i,j],2) +   # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i,j],4) +   # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i,j] +
+    beta.lp[5] * walktest[i,j]    
     }
     }
     }
@@ -763,10 +890,10 @@ cat(file="MSocc-HM-TL-fox.txt",
 
 #### Final models all targeted + habitat patch cameras ####
 
-## Roe deer ##
+## Moose ##
 
 # model
-cat(file="MSocc-HM-TH-roedeer.txt", 
+cat(file="MSocc-HM-TH-moose.txt", 
     "
     model{
     
@@ -778,13 +905,19 @@ cat(file="MSocc-HM-TH-roedeer.txt",
     int.theta <- logit(theta0)        #Intercepts for availability probability
     theta0 ~ dunif(0,1) 
     
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
+    for(t in 1:2){
+    int.p[t] <- logit(p0[t])          #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)     
+    }
     
-    
-    #Slope for site covariate
+    #Slope of theta covariate
     beta.ltheta ~ dnorm(0,0.01)
-
+    
+    #Slope of p covariates
+    for(t in 1:5){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }    
+    
     #Likelihood (or basic model structure)
     for(i in 1:n.site){
     
@@ -805,17 +938,22 @@ cat(file="MSocc-HM-TH-roedeer.txt",
     # detection probability on day k
     y[i,j,k] ~ dbern(mu.y[i,j,k])
     mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p 
+    logit(p[i,j,k]) <- int.p[j] +
+    beta.lp[1] * equals(micro[i,j],2) +   # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i,j],4) +   # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i,j] +
+    beta.lp[5] * walktest[i,j]
     }
     }
     }
     } #End Model
     ")
 
-## Mountain hare ##
+## Roe deer ##
 
 # model
-cat(file="MSocc-HM-TH-hare.txt", 
+cat(file="MSocc-HM-TH-roedeer.txt", 
     "
     model{
     
@@ -827,12 +965,18 @@ cat(file="MSocc-HM-TH-hare.txt",
     int.theta <- logit(theta0)        #Intercepts for availability probability
     theta0 ~ dunif(0,1) 
     
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
+    for(t in 1:2){
+    int.p[t] <- logit(p0[t])                #Intercepts for detection probability
+    p0[t] ~ dunif(0,1)     
+    }
     
+    #Slope of theta covariate
+    beta.ltheta ~ dnorm(0,0.01)
     
-    #Slope for p covariate
-    beta.lp ~ dnorm(0,0.01)
+    #Slope of p covariates
+    for(t in 1:5){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }    
     
     #Likelihood (or basic model structure)
     for(i in 1:n.site){
@@ -846,71 +990,25 @@ cat(file="MSocc-HM-TH-hare.txt",
     #Occurrence at camera location j
     a[i,j] ~ dbern(mu.a[i,j])
     mu.a[i,j] <- z[i] * theta[i,j]
-    logit(theta[i,j]) <- int.theta 
+    logit(theta[i,j]) <- int.theta +
+    beta.ltheta * field.site[i,j]
     
     for(k in 1:n.days){
     
     # detection probability on day k
     y[i,j,k] ~ dbern(mu.y[i,j,k])
     mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p +
-    beta.lp * target.cam[i,j]
+    logit(p[i,j,k]) <- int.p[j] +
+    beta.lp[1] * equals(micro[i,j],2) +   # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i,j],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i,j],4) +   # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i,j] +
+    beta.lp[5] * walktest[i,j]
     }
     }
     }
     } #End Model
     ")
-
-## Red fox ##
-
-# model
-cat(file="MSocc-HM-TH-fox.txt", 
-    "
-    model{
-    
-    # Priors and model for params
-    
-    int.psi <- logit(psi0)            #Intercept for occupancy probability
-    psi0 ~ dunif(0,1)        
-    
-    int.theta <- logit(theta0)        #Intercepts for availability probability
-    theta0 ~ dunif(0,1) 
-    
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
-    
-    
-    #Slope for p covariate
-    beta.lp ~ dnorm(0,0.01)
-   
-
-    #Likelihood (or basic model structure)
-    for(i in 1:n.site){
-    
-    #Occurrence in site i
-    z[i] ~ dbern(psi[i])
-    logit(psi[i]) <- int.psi 
-    
-    for(j in 1:n.cts){
-    
-    #Occurrence at camera location j
-    a[i,j] ~ dbern(mu.a[i,j])
-    mu.a[i,j] <- z[i] * theta[i,j]
-    logit(theta[i,j]) <- int.theta 
-    
-    for(k in 1:n.days){
-    
-    # detection probability on day k
-    y[i,j,k] ~ dbern(mu.y[i,j,k])
-    mu.y[i,j,k] <- a[i,j] * p[i,j,k]
-    logit(p[i,j,k]) <- int.p +
-    beta.lp[1] * target.cam[i,j] 
-    }
-    }
-    }
-    } #End Model
-    ")
-
 
 #### Final models targeted cameras ####
 
@@ -921,18 +1019,22 @@ cat(file="occ-HM-T-moose.txt",
     "
     model{
     
-   # Priors and model for params
+    # Priors and model for params
     
     int.psi <- logit(psi0)            #Intercept for occupancy probability
     psi0 ~ dunif(0,1)        
     
     int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
+    p0 ~ dunif(0,1)
     
-    
-    #Slope for occupancy covariate
+    #Slope of site covariate
     beta.lpsi ~ dnorm(0,0.01)
-
+    
+    #Slope of p covariates
+    for(t in 1:5){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }
+    
     #Likelihood (or basic model structure)
     for(i in 1:n.site){
     
@@ -946,44 +1048,12 @@ cat(file="occ-HM-T-moose.txt",
     # detection probability on day k
     y[i,k] ~ dbern(mu.y[i,k])
     mu.y[i,k] <- z[i] * p[i,k]
-    logit(p[i,k]) <- int.p 
-    }
-    }
-    } #End Model
-    ")
-
-## Roe deer ##
-
-# model
-cat(file="occ-HM-T-roedeer.txt", 
-    "
-    model{
-    
-    # Priors and model for params
-    
-    int.psi <- logit(psi0)            #Intercept for occupancy probability
-    psi0 ~ dunif(0,1)        
-    
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
-    
-    #Slope for p covariate
-    beta.lp ~ dnorm(0,0.01)
-    
-    #Likelihood (or basic model structure)
-    for(i in 1:n.site){
-    
-    #Occurrence in site i
-    z[i] ~ dbern(psi[i])
-    logit(psi[i]) <- int.psi 
-
-    for(k in 1:n.days){
-    
-    # detection probability on day k
-    y[i,k] ~ dbern(mu.y[i,k])
-    mu.y[i,k] <- z[i] * p[i,k]
     logit(p[i,k]) <- int.p +
-    beta.lp * walktest[i]
+    beta.lp[1] * equals(micro[i],2) +   # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i],4) +   # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i] +
+    beta.lp[5] * walktest[i]
     }
     }
     } #End Model
@@ -1010,7 +1080,9 @@ cat(file="occ-HM-T-squirrel.txt",
     }
 
     #Slope for p covariate
-    beta.lp ~ dnorm(0,0.01)
+    for(t in 1:5){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }
     
     #Likelihood (or basic model structure)
     for(i in 1:n.site){
@@ -1028,57 +1100,20 @@ cat(file="occ-HM-T-squirrel.txt",
     y[i,k] ~ dbern(mu.y[i,k])
     mu.y[i,k] <- z[i] * p[i,k]
     logit(p[i,k]) <- int.p +
-    beta.lp * walktest[i]
-    }
-    }
-    } #End Model
-    ")
-
-## Wolf ##
-
-# model
-cat(file="occ-HM-T-wolf.txt", 
-    "
-    model{
-    
-    # Priors and model for params
-    
-    int.psi <- logit(psi0)            #Intercept for occupancy probability
-    psi0 ~ dunif(0,1)        
-    
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
-    
-    # slopes for p covariate
-    for(t in 1:3){
-    beta.lp[t] ~ dnorm(0,0.01)
-    }
-
-    #Likelihood (or basic model structure)
-    for(i in 1:n.site){
-    
-    #Occurrence in site i
-    z[i] ~ dbern(psi[i])
-    logit(psi[i]) <- int.psi
-    
-    for(k in 1:n.days){
-    
-    # detection probability on day k
-    y[i,k] ~ dbern(mu.y[i,k])
-    mu.y[i,k] <- z[i] * p[i,k]
-    logit(p[i,k]) <- int.p +
     beta.lp[1] * equals(micro[i],2) +   # forest road compared to no feature (intercept)
     beta.lp[2] * equals(micro[i],3) +   # wildlife trail compared to no feature (intercept)
-    beta.lp[3] * equals(micro[i],4)    # cliff compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i],4) +   # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i] +
+    beta.lp[5] * walktest[i]
     }
     }
     } #End Model
     ")
 
-## Badger ##
+## Lynx ##
 
 # model
-cat(file="occ-HM-T-badger.txt", 
+cat(file="MSocc-HM-T-lynx.txt", 
     "
     model{
     
@@ -1088,11 +1123,16 @@ cat(file="occ-HM-T-badger.txt",
     psi0 ~ dunif(0,1)        
     
     int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
+    p0 ~ dunif(0,1)
     
-    #Slope for psi covariate
+    #Slope of site covariate
     beta.lpsi ~ dnorm(0,0.01)
-
+    
+    #Slope of p covariates
+    for(t in 1:5){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }
+    
     #Likelihood (or basic model structure)
     for(i in 1:n.site){
     
@@ -1106,44 +1146,12 @@ cat(file="occ-HM-T-badger.txt",
     # detection probability on day k
     y[i,k] ~ dbern(mu.y[i,k])
     mu.y[i,k] <- z[i] * p[i,k]
-    logit(p[i,k]) <- int.p
-    }
-    }
-    } #End Model
-    ")
-
-## Red fox ##
-
-# model
-cat(file="occ-HM-T-fox.txt", 
-    "
-    model{
-    
-    # Priors and model for params
-    
-    int.psi <- logit(psi0)            #Intercept for occupancy probability
-    psi0 ~ dunif(0,1)        
-    
-    int.p <- logit(p0)                #Intercepts for detection probability
-    p0 ~ dunif(0,1)     
-
-    #Slope for p covariate
-    beta.lp ~ dnorm(0,0.01)
-    
-    #Likelihood (or basic model structure)
-    for(i in 1:n.site){
-    
-    #Occurrence in site i
-    z[i] ~ dbern(psi[i])
-    logit(psi[i]) <- int.psi
-    
-    for(k in 1:n.days){
-    
-    # detection probability on day k
-    y[i,k] ~ dbern(mu.y[i,k])
-    mu.y[i,k] <- z[i] * p[i,k]
     logit(p[i,k]) <- int.p +
-    beta.lp * walktest[i]
+    beta.lp[1] * equals(micro[i],2) +   # forest road compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[3] * equals(micro[i],4) +   # cliff compared to no feature (intercept)
+    beta.lp[4] * cam.height[i] +
+    beta.lp[5] * walktest[i]
     }
     }
     } #End Model
@@ -1151,10 +1159,10 @@ cat(file="occ-HM-T-fox.txt",
 
 #### Final models landscape cameras ####
 
-## Mountain hare ##
+## Moose ##
 
 # model
-cat(file="occ-HM-L-hare.txt", 
+cat(file="MSocc-HM-L-moose.txt", 
     "
     model{
     
@@ -1166,8 +1174,11 @@ cat(file="occ-HM-L-hare.txt",
     int.p <- logit(p0)                #Intercepts for detection probability
     p0 ~ dunif(0,1) 
     
+    #Slope for psi covariate
+    beta.lpsi ~ dnorm(0,0.01)
+    
     #Slope for p covariates
-    for(t in 1:3){
+    for(t in 1:4){
     beta.lp[t] ~ dnorm(0,0.01)
     }
     
@@ -1176,7 +1187,8 @@ cat(file="occ-HM-L-hare.txt",
     
     #Occurrence in site i
     z[i] ~ dbern(psi[i])
-    logit(psi[i]) <- int.psi 
+    logit(psi[i]) <- int.psi +
+    beta.lpsi * forest.site[i]
     
     for(k in 1:n.days){
     
@@ -1185,8 +1197,9 @@ cat(file="occ-HM-L-hare.txt",
     mu.y[i,k] <- z[i] * p[i,k]
     logit(p[i,k]) <- int.p +
     beta.lp[1] * equals(micro[i],3) +   # wildlife trail compared to no feature (intercept)
-    beta.lp[2] * equals(micro[i],4) +    # cliff compared to no feature (intercept)
-    beta.lp[3] * walktest[i]
+    beta.lp[2] * equals(micro[i],4) +   # cliff compared to no feature (intercept)
+    beta.lp[3] * cam.height[i] +
+    beta.lp[4] * walktest[i]
     }
     }
     } #End Model
@@ -1211,6 +1224,11 @@ cat(file="occ-HM-L-fox.txt",
     for(t in 1:2){
     beta.lpsi[t] ~ dnorm(0,0.01)
     }
+    
+    #Slope for p covariates
+    for(t in 1:4){
+    beta.lp[t] ~ dnorm(0,0.01)
+    }
 
     #Likelihood (or basic model structure)
     for(i in 1:n.site){
@@ -1226,7 +1244,11 @@ cat(file="occ-HM-L-fox.txt",
     # detection probability on day k
     y[i,k] ~ dbern(mu.y[i,k])
     mu.y[i,k] <- z[i] * p[i,k]
-    logit(p[i,k]) <- int.p
+    logit(p[i,k]) <- int.p +
+    beta.lp[1] * equals(micro[i],3) +   # wildlife trail compared to no feature (intercept)
+    beta.lp[2] * equals(micro[i],4) +    # cliff compared to no feature (intercept)
+    beta.lp[3] * cam.height[i] +
+    beta.lp[4] * walktest[i]
     }
     }
     } #End Model
