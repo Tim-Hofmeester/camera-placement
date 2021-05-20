@@ -10,3 +10,7 @@ A central goal in camera trapping (CT) studies is to maximize detection probabil
 The MSocc- files contain the detection history and covariate data as used in the manuscript. Detection histories are given in an array of three dimensions: 1) grid cells (i), 2) camera sites within grid cells in the order Targeted camera, Habitat-patch random camera, Landscape random camera, (j) and 3) detection periods of 5 days (k). See manuscript for more information.
 
 The R-script contains the description of the models and code to run the models using the jagsUI package and different MSocc- files.
+
+<b>Repository</b>
+A secured version of the data and code as used in the published article can be found on Zenodo:
+<a href="https://zenodo.org/badge/latestdoi/216810454"><img src="https://zenodo.org/badge/216810454.svg" alt="DOI"></a>
