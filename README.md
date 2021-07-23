@@ -1,5 +1,5 @@
 # Camera-placement
-Repository for data and code for the manuscript entitled: Effects of camera-trap placement and number on detection of members of a mammalian assemblage by Tim R. Hofmeester, Neri H. Thorsen, Joris P. G. M. Cromsigt, Jonas Kindberg, Henrik Andrén, John D. C. Linnell & John Odden, accepted for publication in Ecosphere.
+Repository for data and code for the publication: Tim R. Hofmeester, Neri H. Thorsen, Joris P. G. M. Cromsigt, Jonas Kindberg, Henrik Andrén, John D. C. Linnell & John Odden. 2021. Effects of camera-trap placement and number on detection of members of a mammalian assemblage. Ecosphere 12: e03662. https://doi.org/10.1002/ecs2.3662
 
 <b>Abstract</b>
 
